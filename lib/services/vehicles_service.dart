@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
  
 class VehicleService {
-  final String baseUrl = ''; // coloque seu URL aqui
+  final String baseUrl = 'https://690bf1f66ad3beba00f6a3cd.mockapi.io/:endpoint'; // coloque seu URL aqui
  
   Future<List<Map<String, dynamic>>> getVehicles() async {
     final response = await http.get(Uri.parse('$baseUrl/vehicles'));
