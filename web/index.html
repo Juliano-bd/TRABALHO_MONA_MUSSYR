@@ -33,7 +33,19 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
-
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+  <script>
+    var firebaseConfig = {
+  apiKey: "AIzaSyDhmSxPftiB9IxIaTsrRTEpboIFv83Pgug",
+  authDomain: "avfmonaboer.firebaseapp.com",
+  projectId: "avfmonaboer",
+  storageBucket: "avfmonaboer.firebasestorage.app",
+  messagingSenderId: "615926358346",
+  appId: "1:615926358346:web:b9f1e83f1bd6c251a2e1b3"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

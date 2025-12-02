@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../providers/cart_provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -12,6 +13,35 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   final TextEditingController _couponController = TextEditingController();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _setupFirebaseMessaging();
+  }
+
+  void _setupFirebaseMessaging() async {
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('Permissão concedida');
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        if (message.notification != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${message.notification!.title}: ${message.notification!.body}'),
+              backgroundColor: Colors.blue,
+            ),
+          );
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +62,6 @@ class _CartScreenState extends State<CartScreen> {
       ),
       body: Column(
         children: [
-          // Lista de Itens
           Expanded(
             child: cart.items.isEmpty
                 ? const Center(child: Text('Seu carrinho está vazio.'))
@@ -69,8 +98,6 @@ class _CartScreenState extends State<CartScreen> {
                     },
                   ),
           ),
-          
-          // Área de Cupom e Totais
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -79,7 +106,6 @@ class _CartScreenState extends State<CartScreen> {
             ),
             child: Column(
               children: [
-                // Campo de Cupom
                 Row(
                   children: [
                     Expanded(
@@ -105,7 +131,6 @@ class _CartScreenState extends State<CartScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                // Resumo de Valores
                 _buildSummaryRow('Subtotal:', cart.subtotal, currency),
                 _buildSummaryRow('Frete:', cart.shippingCost, currency),
                 _buildSummaryRow('Desconto:', -cart.discount, currency, isDiscount: true),
@@ -118,9 +143,33 @@ class _CartScreenState extends State<CartScreen> {
                     backgroundColor: Colors.green,
                     minimumSize: const Size(double.infinity, 50),
                   ),
-                  onPressed: () {
-                    // Lógica de finalizar compra aqui
-                  },
+                  onPressed: () async {
+    cart.clearCart();
+
+    String? token = await _firebaseMessaging.getToken(
+      vapidKey: "BIak-Tqra99UXdmjhYXprlu4Capk6d2f-iLclM_5AWlaxKGArj8YAG_yTTjtCSwiCzBP868PAU0Ig-pSSTpzFUE", 
+    );
+
+    print("TOKEN PARA TESTE: $token");
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Pedido Recebido!'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Aguardando confirmação via notificação...'),
+            const SizedBox(height: 10),
+            Text('Token (copie do console): $token', style: const TextStyle(fontSize: 10, color: Colors.grey)),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))
+        ],
+      ),
+    );
+  },
                   child: const Text('FINALIZAR COMPRA', style: TextStyle(color: Colors.white)),
                 ),
               ],

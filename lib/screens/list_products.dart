@@ -59,7 +59,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
         title: const Text('Joalheria Deluxe'),
         backgroundColor: Colors.amber[800],
         actions: [
-          // Ícone do Carrinho com Badge (contador)
           Consumer<CartProvider>(
             builder: (context, cart, child) => Badge(
               label: Text(cart.totalItemCount.toString()),
@@ -79,7 +78,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
       ),
       body: Column(
         children: [
-          // Filtro de Pesquisa
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -111,10 +109,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
       : null,
   child: product.imageUrl.isEmpty
       ? const Icon(Icons.diamond, color: Colors.amber)
-      : null, // Se tiver imagem, não mostra o ícone sobre ela
+      : null,
   onBackgroundImageError: (_, __) {
-    // Se a imagem da web falhar (erro 404 ou CORS), este callback é chamado.
-    // O flutter vai desenhar o background color, mas podemos aprimorar se necessário.
   },
 ),
                           title: Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -123,7 +119,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // Botão Adicionar ao Carrinho
                               IconButton(
                                 icon: const Icon(Icons.add_shopping_cart, color: Colors.green),
                                 onPressed: () {
@@ -133,7 +128,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                   );
                                 },
                               ),
-                              // Botão Editar (Admin)
                               IconButton(
                                 icon: const Icon(Icons.edit, color: Colors.blue),
                                 onPressed: () async {
@@ -144,7 +138,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                   if (result == true) _loadProducts();
                                 },
                               ),
-                              // Botão Excluir (Admin)
                               IconButton(
                                 icon: const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () async {
