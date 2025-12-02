@@ -70,8 +70,9 @@ class CartProvider with ChangeNotifier {
   return _items.fold(0, (sum, item) => sum + item.quantity);
 }
 
-  void applyCoupon(String coupon) {
-    if (coupon.toUpperCase() == 'JOIA10') {
+ void applyCoupon(String coupon) {
+    // Altera JOIA10 para AMOR10
+    if (coupon.toUpperCase() == 'AMOR10' || coupon.toUpperCase() == 'SEXY10') {
       _discount = subtotal * 0.10;
       _couponApplied = true;
     } else if (coupon.toUpperCase() == 'FRETEGRATIS') {
